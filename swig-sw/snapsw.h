@@ -199,7 +199,6 @@ void GetNeighborhood(const TIntV& Nodes, const TIntIntVH& AdjLists, TIntV& Hood)
   // change a hash table to a vector
   HashHood.GetKeyV(Hood);
 }
-  
 
 void Edge2Hash(const TIntV& Edges, TIntH& Hash) {
   int i;
@@ -218,5 +217,37 @@ void Edge2Hash(const TIntV& Edges, TIntH& Hash) {
   }
 }
 
-}; // namespace TSnap
+void GetNewNodes(const TIntV& Nodes, TIntH& Visited, TIntH& NewNodes, int distance) {
+  int i;
+  int Num;
+  int Node;
 
+  //printf("GetNewNodes Nodes %d\n",Nodes.Len());
+  Num = Nodes.Len();
+
+  for (i = 0; i < Num; i++) {
+    Node = Nodes.GetVal(i).Val;
+
+    if (!Visited.IsKey(Node)) {
+      NewNodes.AddDat(Node,0);
+      Visited.AddDat(Node,distance);
+    }
+  }
+
+  //printf("GetNewNodes NewNodes %d\n",NewNodes.Len());
+}
+
+void Nodes2Tasks(const TIntH& Nodes, TIntIntVV& Tasks, int tsize) {
+  int Node;
+  int TaskId;
+
+  for (TIntH::TIter It = Nodes.BegI(); It < Nodes.EndI(); It++) {
+    Node = It.GetKey();
+    TaskId = Node / tsize;
+
+    //printf("Nodes2Tasks node %d, task %d\n", Node, TaskId);
+    Tasks[TaskId].Add(Node);
+  }
+}
+
+}; // namespace TSnap
